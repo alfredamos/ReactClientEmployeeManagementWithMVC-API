@@ -18,22 +18,23 @@ const initialEmployeeData = {
 
 
 export const DeleteEmployee = (props) => {   
-    const [employee, setEmployee] = useState(initialEmployeeData);    
+    const [employee, setEmployee] = useState(initialEmployeeData);   
     const [readyForRender, setReadyForRender] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
 
-    const apiUrl = `https://localhost:5001/api/employees/${props.match.params.id}`;   
+    const apiUrlId = `https://localhost:5001/api/employees/${props.match.params.id}`;   
+    const apiUrl = `https://localhost:5001/api/employees`;
 
 
     useEffect(() => {
         const GetData = async () => {
-            const result = await axios(apiUrl);
+            const result = await axios(apiUrlId);
             setEmployee(result.data);
             setReadyForRender(true);
             setIsDelete(false);
         };
         GetData();
-    }, [apiUrl]);
+    }, [apiUrlId]);
 
 
     const deleteClick = (event) => {
@@ -44,10 +45,7 @@ export const DeleteEmployee = (props) => {
 
     const deleteHandler = (deleteConfirmed) =>{                
         if (deleteConfirmed) {
-            axios.delete(apiUrl)  
-                .then((result) => {                  
-                    props.history.push('/')                    
-                }); 
+            axios.delete(apiUrlId);           
         }        
         props.history.replace({
             pathname: '/'

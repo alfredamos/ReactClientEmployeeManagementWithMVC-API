@@ -9,23 +9,23 @@ export const DeleteDepartment = (props) => {
     const [readyForRender, setReadyForRender] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
 
-    const apiUrl = `https://localhost:5001/api/departments/${props.match.params.id}`;
+    const departmentApiUrl = `https://localhost:5001/api/departments/${props.match.params.id}`;
 
 
     useEffect(() => {
         const GetData = async () => {
-            const result = await axios(apiUrl);
+            const result = await axios(departmentApiUrl);
             setDepartment(result.data);
             setReadyForRender(true);
             setIsDelete(false);
         };
         GetData();
-    }, [apiUrl]);
+    }, [departmentApiUrl]);
 
 
     const deleteHandler = (deleteConfirmed) => {        
         if (deleteConfirmed) {
-            axios.delete(apiUrl)
+            axios.delete(departmentApiUrl)
         }
         props.history.replace({
             pathname: '/departmentList'

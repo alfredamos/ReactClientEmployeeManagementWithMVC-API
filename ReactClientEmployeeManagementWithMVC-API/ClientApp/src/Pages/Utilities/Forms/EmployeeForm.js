@@ -1,12 +1,65 @@
-﻿import React from 'react';
+﻿import React, {useState} from 'react';
 import DatePicker from 'react-date-picker';
-import "react-datepicker/dist/react-datepicker.css";
+import "react-dates/lib/css/_datepicker.css";
 
 
-export const EmployeeForm = (props) => {
-    
-    const { departments, employee, backToListHandler, formSubmitHandler, heading, inputChangeHandler,
-        inputImageChangeHandler, imageSrc, upsertButton, inputDateChangeHandler, dateOfBirth } = props;
+
+export const EmployeeForm = (props) => {    
+    const { departments, backToListHandler, heading, imageSRC, upsertButton, onEmployeeChange, initialEmployeeData } = props;
+
+    const [employee, setEmployee] = useState(initialEmployeeData);
+    const [imageSrc, setImageSrc] = useState(imageSRC);
+
+
+    const formSubmitHandler = (event) => {
+        event.preventDefault();
+        onEmployeeChange(employee);
+    }
+
+
+    const inputChangeHandler = (event) => {
+        event.persist();
+        const { name, value } = event.target;
+        setEmployee({ ...employee, [name]: value });
+    }
+
+
+    const inputDateChangeHandler = (date) => {             
+        setEmployee({ ...employee, dateOfBirth: date })
+    }
+
+
+
+    const inputImageChangeHandler = async (event) => { //----> async removed
+        event.persist();
+        if (event.target.files && event.target.files[0]) {
+            const file = event.target.files[0];
+            const imageSource = await ConvertBase64(file); //----> await removed
+            setImageSrc(imageSource);
+            const fileArray = imageSource.split(","); //----> Extract the base64 string ftom the combination of data type and base64 string.
+            const fileURL = fileArray[fileArray.length - 1];
+            setEmployee({ ...employee, photoPath: fileURL });           
+        } else {
+            setEmployee({ ...employee, photoPath: "" });          
+        }
+
+    }
+
+
+    const ConvertBase64 = async (file) => { 
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    }
 
 
     return (
@@ -86,7 +139,6 @@ export const EmployeeForm = (props) => {
                                     <option
                                         key={department.departmentID}
                                         value={department.departmentID}
-
                                     >
                                         {department.departmentName}
                                     </option>
@@ -98,13 +150,12 @@ export const EmployeeForm = (props) => {
                         <label htmlFor="dateOfBirth" className="form-control-label">
                             Date of Birth:
                         </label>                        
-                        <DatePicker
-                            className="form-control"
-                            selected={dateOfBirth}                                                      
-                            showTimeSelect
-                            dateFormat="MMMM d, yyyy"
-                            onChange={inputDateChangeHandler}  
-                        />
+                        <DatePicker className="form-control"
+                            selected={employee.dateOfBirth}
+                            placeholderText="Select Date"
+                            showPopperArrow={false}
+                            onChange={inputDateChangeHandler}
+                        />  
                     </div>
                     <div className="form-group">
                         <label className="form-control-label">
@@ -116,8 +167,8 @@ export const EmployeeForm = (props) => {
                             placeholder="Choose Photo"
                             onChange={inputImageChangeHandler}
                             className="form-control-file"
-                        />
-                        <img src={imageSrc} style={{ height: "200px" }} alt="" />
+                        />                        
+                        <img src={imageSrc === "" ? imageSRC : imageSrc} style={{ height: "200px" }} alt="" />
                     </div>
                     <div className="form-group">
                         <button type="submit" className="btn btn-secondary btn-block"><strong>{upsertButton}</strong></button>

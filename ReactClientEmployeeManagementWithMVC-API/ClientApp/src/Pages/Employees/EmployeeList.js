@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { EmployeeHeadCount } from './EmployeeHeadCount';
 import { SearchItem } from '../Utilities/Helpers/SearchItem'
+//import { DeleteEmployee } from './DeleteEmployee';
 import axios from 'axios';
 
 
@@ -31,7 +32,7 @@ export const EmployeeList = (props) => {
             setIsLoading(true);
         };
         GetData();
-    }, []);
+    }, [employeeApiUrl, isLoading]);
 
 
 
