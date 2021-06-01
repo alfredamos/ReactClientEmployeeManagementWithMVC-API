@@ -23,8 +23,7 @@ export const DeleteEmployee = (props) => {
     const [isDelete, setIsDelete] = useState(false);
 
     const apiUrlId = `https://localhost:5001/api/employees/${props.match.params.id}`;   
-    const apiUrl = `https://localhost:5001/api/employees`;
-
+    
 
     useEffect(() => {
         const GetData = async () => {

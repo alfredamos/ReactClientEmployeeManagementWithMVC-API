@@ -1,5 +1,6 @@
 ﻿import React, {useState} from 'react';
 import DatePicker from 'react-date-picker';
+import "react-datetime/css/react-datetime.css";
 import "react-dates/lib/css/_datepicker.css";
 
 
